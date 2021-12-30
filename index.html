@@ -20,6 +20,101 @@
   </head>
 
   <body>
+    <!-- loading animation -->
+    <section id="loading-screen">
+      <div id="loader"></div>
+    </section>
+    <style>
+      html,
+      body {
+        overflow: hidden;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #loading-screen {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        opacity: 1;
+        transition: 1s opacity;
+      }
+
+      #loading-screen.fade-out {
+        opacity: 0;
+      }
+
+      #loader {
+        display: block;
+        position: relative;
+        left: 50%;
+        top: 50%;
+        width: 150px;
+        height: 150px;
+        margin: -75px 0 0 -75px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #9370db;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+      }
+      #loader:before {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #ba55d3;
+        -webkit-animation: spin 3s linear infinite;
+        animation: spin 3s linear infinite;
+      }
+      #loader:after {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #ff00ff;
+        -webkit-animation: spin 1.5s linear infinite;
+        animation: spin 1.5s linear infinite;
+      }
+      @-webkit-keyframes spin {
+        0% {
+          -webkit-transform: rotate(0deg);
+          -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          -ms-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes spin {
+        0% {
+          -webkit-transform: rotate(0deg);
+          -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          -ms-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+
     <div id="container"></div>
     <script type="module">
       import * as THREE from "https://cdn.skypack.dev/pin/three@v0.136.0-4Px7Kx1INqCFBN0tXUQc/mode=imports,min/optimized/three.js";
@@ -32,7 +127,7 @@
       import { GLTFLoader } from "https://cdn.skypack.dev/pin/three@v0.136.0-4Px7Kx1INqCFBN0tXUQc/mode=imports,min/unoptimized/examples/jsm/loaders/GLTFLoader.js";
       import { DRACOLoader } from "https://cdn.skypack.dev/pin/three@v0.136.0-4Px7Kx1INqCFBN0tXUQc/mode=imports,min/unoptimized/examples/jsm/loaders/DRACOLoader.js";
 
-      let mixer;
+      // let mixer;
 
       const clock = new THREE.Clock();
       const container = document.getElementById("container");
@@ -74,8 +169,16 @@
         "https://cdn.skypack.dev/pin/three@v0.136.0-4Px7Kx1INqCFBN0tXUQc/mode=raw,min/examples/js/libs/draco/gltf"
       );
 
-      const loader = new GLTFLoader();
-      loader.setDRACOLoader(dracoLoader);
+      const manager = new THREE.LoadingManager(() => {
+        const loadingScreen = document.getElementById("loading-screen");
+        loadingScreen.classList.add("fade-out");
+
+        // optional: remove loader from DOM via event listener
+        loadingScreen.addEventListener("transitionend", onTransitionEnd);
+      });
+
+      const loader = new GLTFLoader(manager);
+      // loader.setDRACOLoader(dracoLoader);
       loader.load(
         "./assets/scene.gltf",
         function (gltf) {
@@ -108,12 +211,15 @@
         const delta = clock.getDelta();
 
         // mixer.update(delta);
-
         controls.update();
 
         stats.update();
 
         renderer.render(scene, camera);
+      }
+
+      function onTransitionEnd(event) {
+        event.target.remove();
       }
     </script>
   </body>
