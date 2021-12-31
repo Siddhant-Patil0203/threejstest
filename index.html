@@ -178,7 +178,7 @@
       });
 
       const loader = new GLTFLoader(manager);
-      // loader.setDRACOLoader(dracoLoader);
+      loader.setDRACOLoader(dracoLoader);
       loader.load(
         "./assets/scene.glb",
         function (gltf) {
