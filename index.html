@@ -126,7 +126,7 @@
 
       import { GLTFLoader } from "https://cdn.skypack.dev/pin/three@v0.136.0-4Px7Kx1INqCFBN0tXUQc/mode=imports,min/unoptimized/examples/jsm/loaders/GLTFLoader.js";
       import { DRACOLoader } from "https://cdn.skypack.dev/pin/three@v0.136.0-4Px7Kx1INqCFBN0tXUQc/mode=imports,min/unoptimized/examples/jsm/loaders/DRACOLoader.js";
-
+      import { ColladaLoader } from "https://cdn.jsdelivr.net/npm/three@0.121.1/examples/jsm/loaders/ColladaLoader.js";
       // let mixer;
 
       const clock = new THREE.Clock();
@@ -180,11 +180,11 @@
       const loader = new GLTFLoader(manager);
       loader.setDRACOLoader(dracoLoader);
       loader.load(
-        "./assets/scene.glb",
+        "./assets/cyberlab.glb",
         function (gltf) {
           const model = gltf.scene;
           model.position.set(1, 1, 0);
-          model.scale.set(0.0001, 0.0001, 0.0001);
+          model.scale.set(0.8, 0.8, 0.8);
           scene.add(model);
 
           // mixer = new THREE.AnimationMixer(model);
